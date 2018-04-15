@@ -669,6 +669,7 @@ $ git clone https://github.com/CornellNLP/CS4300_Flask_template.git
 $ cd CS4300_Flask_template
 $ cd vagrant
 $ vagrant up
+$ vagrant provision
 ...
 TASK [Make sure nginx is running] **********************************************
 ok: [default] => {"changed": false, "name": "nginx", "state": "started"}
@@ -684,7 +685,7 @@ Now navigate to `http://192.168.33.10/` and you will see the app loaded up!
 
 Let's deploy this AWS now! 
 
-First step is to launch an EC2 instance.
+First step is to launch an EC2 instance (on the Oregon Availability Zone)
 
 This EC2 instance should be using `Ubuntu Server 14.04 LTS (HVM), SSD Volume Type - ami-7c22b41c` as an AMI. 
 This AMI will be the same type of OS that we used for our VM.
@@ -708,6 +709,7 @@ Ensure, that your vagrant folder looks like this:
 ```bash
 $ ls
 Vagrantfile     a4keypair.pem   ansible.cfg     cs.nginx.j2     hosts           site.yml        upstart.conf.j2
+$ chmod 700 a4keypair.pem
 ```
 
 Your next step will be to take the public IP found when clicking on your instance in the EC2 terminal under: `IPv4 Public IP`
