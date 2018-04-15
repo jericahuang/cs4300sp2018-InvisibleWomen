@@ -1,5 +1,5 @@
 alembic==0.9.8
-appdev.py==0.0.1
+git+https://github.com/cuappdev/appdev.py.git 
 click==6.7
 Flask==0.12.2
 Flask-Migrate==2.1.1
