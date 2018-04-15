@@ -26,6 +26,12 @@
     }
 }
 
+.topcorner {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+}
+
 #bottomcorner {
     position: absolute;
     float: right;
