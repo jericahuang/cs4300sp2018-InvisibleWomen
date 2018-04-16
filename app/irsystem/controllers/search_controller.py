@@ -18,5 +18,8 @@ def search():
 		output_message = ''
 	else:
 		output_message = "you searched for a woman who " + query
-		data = top_5_dict_words[query]
+		if query in top_5_dict_words:
+			data = top_5_dict_words[query]
+		else:
+			data = ["No results :("]
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
