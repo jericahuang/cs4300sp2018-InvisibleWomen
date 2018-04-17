@@ -8,6 +8,13 @@
     <link rel="icon" type="image/png" href="/static/gracehopper.png">
 </head>
 
+<script>
+    function convertName(name) {
+        var replaced = name.split(' ').join('+');
+        return replaced;
+    }
+</script>
+
 <body style="background:url('https://img00.deviantart.net/da64/i/2008/306/e/b/starry_sky_stock_by_budgie.jpg')">
     <div class="topcorner">
         <p style="font-size: 15px; font-family:Futura; color: grey">Project Name: Invisible Women</p>
@@ -36,6 +43,9 @@
         <br>
         <br>
         <p style="font-size: 20px; font-family:Futura; color: #fff">{{d}}</p>
+        <br>
+<!--        <a href="/" >{{d}}</a>-->
+        <!--        <a href="/?search=" + {{d}}>{{d}}</a>-->
         {% endfor %} {% endif %}
     </form>
 
