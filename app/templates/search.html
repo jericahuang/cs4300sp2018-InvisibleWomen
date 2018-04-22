@@ -39,11 +39,24 @@
 
     <form class="form-inline global-search">
         {% if data %}
-        <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> {% for d in data %}
-        <br>
-        <br>
-        <p style="font-size: 20px; font-family:Futura; color: #fff">{{d}}</p>
-        <br>
+        <div class="container">
+            <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> {% for d in data %}
+            <br>
+            <br>
+            {% if d.name %}
+            <p style="font-size: 20px; font-family:Futura; color: #fff">
+                {{d.name}}
+            </p>
+            <p style="font-size: 15px; font-family:Futura; color: #eee">
+                {{d.summary}}
+            </p>
+            {% else %}
+            <p style="font-size: 20px; font-family:Futura; color: #fff">
+                {{d}}
+            </p>
+            {% endif %}
+            <br>
+        </div>
 <!--        <a href="/" >{{d}}</a>-->
         <!--        <a href="/?search=" + {{d}}>{{d}}</a>-->
         {% endfor %} {% endif %}
