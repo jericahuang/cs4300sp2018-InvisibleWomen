@@ -15,8 +15,6 @@ cytoolz==0.8.2
 decorator==4.3.0
 dill==0.2.7.1
 docutils==0.14
-empath==0.89
-en-core-web-sm==2.0.0
 enum34==1.1.6
 Flask==0.10.1
 Flask-Bcrypt==0.7.1
@@ -92,6 +90,5 @@ traitlets==4.3.2
 ujson==1.35
 wcwidth==0.1.7
 Werkzeug==0.11.9
-wikipedia==1.4.0
 wrapt==1.10.11
 WTForms==2.1
