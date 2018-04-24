@@ -3,6 +3,7 @@
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <title>Invisible Women</title>
     <link rel="icon" type="image/png" href="/static/gracehopper.png">
@@ -39,27 +40,39 @@
 
     <form class="form-inline global-search">
         {% if data %}
-        <div class="container">
-            <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> {% for d in data %}
-            <br>
-            <br>
+        <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> 
+        <table>
+            {% for d in data %}
+
             {% if d.name %}
-            <p style="font-size: 20px; font-family:Futura; color: #fff">
-                {{d.name}}
-            </p>
-            <p style="font-size: 15px; font-family:Futura; color: #eee">
-                {{d.summary}}
-            </p>
+            <tr>
+                <td class="bio">
+                    <span class="name">{{d.name}}</span><span class="views"><i class="fas fa-eye"></i>&nbsp;&nbsp;{{d.views}}</span>
+                    <br>
+                    <span class="summary">{{d.summary}}</span>
+                </td>
+                <td>
+                    {% if d.similar %}
+                    Similar women
+                    <ol>
+                        {% for similars in d.similar %}
+                        <li>{{similars}}</li>
+                        {% endfor %} 
+                    </ol>
+                    {% endif %}
+                </td>
+            </tr>
+
             {% else %}
             <p style="font-size: 20px; font-family:Futura; color: #fff">
                 {{d}}
             </p>
             {% endif %}
             <br>
-        </div>
-<!--        <a href="/" >{{d}}</a>-->
-        <!--        <a href="/?search=" + {{d}}>{{d}}</a>-->
-        {% endfor %} {% endif %}
+        
+        {% endfor %} 
+        </table>
+        {% endif %}
     </form>
 
     <div id="bottomcorner">

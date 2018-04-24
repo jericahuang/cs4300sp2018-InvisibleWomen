@@ -21,7 +21,6 @@
         width: 500px;
     }
     .global-search * {
-        display: inline-block;
         margin-bottom: 0;
     }
 }
@@ -112,4 +111,45 @@ input:required:valid {
 
 input:required:invalid {
     color: rgba(255, 255, 255, 0.5);
+}
+
+table{
+    color:#fff;
+    font-family:Futura;
+    font-size: 20px;
+    border-collapse: collapse;
+    display: block;
+    margin:auto;
+    width:90%;
+}
+tr{
+    padding:10px 20px;
+}
+.name{
+    font-size: 20px;
+    display: inline-block;
+}
+.summary{
+    font-size:14px;
+    color:#ddd;
+}
+.views{
+    display: inline-block;
+    margin-left:50px;
+    color:#aaa;
+    font-size:14px;
+}
+td.bio{
+    width:70%;
+    margin:20px;
+}
+td{
+    display: inline-block;
+}
+tr{
+    display: block;
+}
+ol{
+    font-size: 15px;
+    color:#ddd;
 }
