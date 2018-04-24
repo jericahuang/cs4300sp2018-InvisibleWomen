@@ -74,7 +74,7 @@ def search():
 		else:
 			data = ["No results :("]
    
-	if data != ["No results :("] and type(data[0]) is not dict:
+	if data != ["No results :("] and len(data)>0 and type(data[0]) is not dict:
 		for i in range(len(data)):
 			womanname=data[i]
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"]}
