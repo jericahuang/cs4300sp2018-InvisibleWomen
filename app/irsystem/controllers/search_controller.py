@@ -71,6 +71,4 @@ def search():
 			data[i]["views"] = women_name_to_data[womanname]["views"]
 			data[i]["similar"] = top_5_dict_women[womanname]
 
-	print(data)
-
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
