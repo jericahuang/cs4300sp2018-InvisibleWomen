@@ -54,7 +54,9 @@ def search():
 			sim_doc_scores = cosine_similarity(q_vec, matx)
 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
 			data = []
-			for hit in sim_docs[0:30]:
+			print sim_docs
+			for hit in sim_docs[0:min(30,len(sim_docs))]:
+				print hit
 				data.append(deduped_women[hit])
 			if len(data)==0:	
 				data = ["No results :("]
