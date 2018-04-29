@@ -6,3 +6,4 @@ vagrant/site.retry
 vagrant/a4keypair.pem
 .env
 .ipynb_checkpoints/
+.DS_Store
