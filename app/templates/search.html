@@ -51,7 +51,7 @@
             {% if d.name %}
             <tr>
                 <td class="bio">
-                    <span class="name">{{d.name}}</span><span class="views">
+                    <span class="name"><a href="{{d.url}}" class="wikilink" target="_blank">{{d.name}}</a></span><span class="views">
                         <i class="fas fa-eye" title="Wikipedia views over the past week"></i>&nbsp;&nbsp;{{d.views}}</span>
                     <br>
                     <span class="summary">{{d.summary}}</span>
