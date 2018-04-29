@@ -18,7 +18,7 @@ net_id = "Amanda Chen (aec255), Pegah Moradi (pm443), Nina Ray (nr327), Jerica H
 top_5_dict_words = pickle.load( open( "top_5_dict_words.pickle", "rb" ) )
 top_5_dict_women = pickle.load( open( "top_5_dict_women.pickle", "rb" ) )
 women_name_to_data = pickle.load( open( "women_name_to_data.pickle", "rb" ) )
-deduped_women = pickle.load( open( "deduped_women.pickle", "rb" ) )
+deduped_women = pickle.load( open( "deduped_women-search.pickle", "rb" ) )
 pkl_file = open('myvectorizer.pickle', 'rb')
 vectorizer = pickle.load(pkl_file)
 matx = pickle.load(pkl_file)
@@ -55,9 +55,12 @@ def search():
 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
 			data = []
 			print sim_docs
-			for hit in sim_docs[0:min(30,len(sim_docs))]:
-				print hit
-				data.append(deduped_women[hit])
+			for hit in sim_docs:
+				if sim_doc_scores[0][hit] > 0:
+					data.append(deduped_women[hit])
+			if len(data)>30:
+				data = data[:30]
+			
 			if len(data)==0:	
 				data = ["No results :("]
 	
