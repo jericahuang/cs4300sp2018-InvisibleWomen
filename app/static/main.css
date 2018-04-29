@@ -31,6 +31,15 @@
     right: 2%;
 }
 
+#homelink{
+    text-decoration: none;
+    text-transform: none;
+    color:#fff;
+}
+#homelink:hover{
+    color:#eee;
+}
+
 #bottomcorner {
     position: absolute;
     float: right;
