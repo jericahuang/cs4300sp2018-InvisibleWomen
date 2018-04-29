@@ -1,0 +1,689 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Requirement already satisfied: spacy in /usr/local/lib/python2.7/site-packages (2.0.11)\n",
+      "Requirement already satisfied: plac<1.0.0,>=0.9.6 in /usr/local/lib/python2.7/site-packages (from spacy) (0.9.6)\n",
+      "Requirement already satisfied: murmurhash<0.29,>=0.28 in /usr/local/lib/python2.7/site-packages (from spacy) (0.28.0)\n",
+      "Requirement already satisfied: numpy>=1.7 in /usr/local/lib/python2.7/site-packages (from spacy) (1.13.1)\n",
+      "Requirement already satisfied: thinc<6.11.0,>=6.10.1 in /usr/local/lib/python2.7/site-packages (from spacy) (6.10.2)\n",
+      "Requirement already satisfied: preshed<2.0.0,>=1.0.0 in /usr/local/lib/python2.7/site-packages (from spacy) (1.0.0)\n",
+      "Requirement already satisfied: pathlib in /usr/local/lib/python2.7/site-packages (from spacy) (1.0.1)\n",
+      "Requirement already satisfied: regex==2017.4.5 in /usr/local/lib/python2.7/site-packages (from spacy) (2017.4.5)\n",
+      "Requirement already satisfied: ujson>=1.35 in /usr/local/lib/python2.7/site-packages (from spacy) (1.35)\n",
+      "Requirement already satisfied: cymem<1.32,>=1.30 in /usr/local/lib/python2.7/site-packages (from spacy) (1.31.2)\n",
+      "Requirement already satisfied: dill<0.3,>=0.2 in /usr/local/lib/python2.7/site-packages (from spacy) (0.2.7.1)\n",
+      "Requirement already satisfied: termcolor in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (1.1.0)\n",
+      "Requirement already satisfied: wrapt in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (1.10.11)\n",
+      "Requirement already satisfied: msgpack-numpy==0.4.1 in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (0.4.1)\n",
+      "Requirement already satisfied: tqdm<5.0.0,>=4.10.0 in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (4.23.0)\n",
+      "Requirement already satisfied: six<2.0.0,>=1.10.0 in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (1.10.0)\n",
+      "Requirement already satisfied: cytoolz<0.9,>=0.8 in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (0.8.2)\n",
+      "Requirement already satisfied: msgpack-python in /usr/local/lib/python2.7/site-packages (from thinc<6.11.0,>=6.10.1->spacy) (0.5.6)\n",
+      "Requirement already satisfied: toolz>=0.8.0 in /usr/local/lib/python2.7/site-packages (from cytoolz<0.9,>=0.8->thinc<6.11.0,>=6.10.1->spacy) (0.9.0)\n",
+      "Requirement already satisfied: nltk in /usr/local/lib/python2.7/site-packages (3.2.5)\n",
+      "Requirement already satisfied: six in /usr/local/lib/python2.7/site-packages (from nltk) (1.10.0)\n"
+     ]
+    }
+   ],
+   "source": [
+    "import sys\n",
+    "!{sys.executable} -m pip install spacy\n",
+    "!{sys.executable} -m pip install nltk"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[nltk_data] Downloading package stopwords to\n",
+      "[nltk_data]     /Users/mayzhou/nltk_data...\n",
+      "[nltk_data]   Package stopwords is already up-to-date!\n"
+     ]
+    }
+   ],
+   "source": [
+    "# the imports used in A2\n",
+    "import re\n",
+    "# import json\n",
+    "from glob import glob\n",
+    "import os\n",
+    "from io import StringIO\n",
+    "from itertools import groupby\n",
+    "import pickle\n",
+    "\n",
+    "import numpy as np\n",
+    "# import bs4\n",
+    "# %matplotlib inline\n",
+    "# import matplotlib.pyplot as plt\n",
+    "# Imports that might help with various functionality\n",
+    "import functools\n",
+    "import operator\n",
+    "\n",
+    "# Additional imports from A3\n",
+    "from __future__ import print_function\n",
+    "import math\n",
+    "from collections import defaultdict\n",
+    "# from nltk.tokenize import TreebankWordTokenizer\n",
+    "# import Levenshtein  # package python-Levenshtein\n",
+    "\n",
+    "# Additional imports from A5\n",
+    "import nltk\n",
+    "# nltk.download()\n",
+    "nltk.download('stopwords')\n",
+    "from nltk.corpus import stopwords\n",
+    "from nltk.tokenize import word_tokenize\n",
+    "\n",
+    "# SPACY package\n",
+    "import spacy\n",
+    "nlp = spacy.load('en')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# import the json\n",
+    "import json\n",
+    "with open(\"data3copy.json\", \"r\") as f:\n",
+    "    women_summaries = json.load(f)\n",
+    "    \n",
+    "# print(women_summaries)\n",
+    "# women_summaries is the json file imported\n",
+    "# it's of the form [{'views' : num_views, 'name' : woman_name, 'summary' : woman_summary}, ...]\n",
+    "# a list of dictionaries of women"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# creates a list of women to keep as a global variable\n",
+    "women_names = list()\n",
+    "for i in range(len(women_summaries)):\n",
+    "    name = women_summaries[i]['name']\n",
+    "    end_index = name.find('(')\n",
+    "    if end_index != -1 and name[: (end_index-1)] not in women_names :\n",
+    "        women_names.append(name[: (end_index-1)])\n",
+    "    elif end_index == -1 and name not in women_names :\n",
+    "        women_names.append(name)\n",
+    "        \n",
+    "# print(women_names)\n",
+    "#women_names is a list of the names of women in order of the JSON file"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from __future__ import unicode_literals"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Builds a dictionary that maps woman to the list of tokens associated with her\n",
+    "# {'woman1' : ['token1', 'token2', ... 'tokenn']}\n",
+    "from __future__ import unicode_literals\n",
+    "\n",
+    "def build_spacy_token_dictionary(input_summaries, input_women_names):\n",
+    "    # Builds a dictionary that maps each woman to their tokenized words (yes we've already done this but we want the spacy version)\n",
+    "    women_token_dictionary = dict()\n",
+    "    \n",
+    "    for i in range(len(input_women_names)):\n",
+    "        name = input_women_names[i]\n",
+    "        summary = input_summaries[i]['summary']\n",
+    "    \n",
+    "        index_was = summary.find('was ')\n",
+    "        index_is = summary.find('is ')\n",
+    "        index_currently = summary.find('currently ')\n",
+    "        if (index_was == -1 and index_is == -1):\n",
+    "            summary2 = summary[index_currently:]\n",
+    "        elif (index_was == -1 and index_currently == -1):\n",
+    "            summary2 = summary[index_is:]\n",
+    "        elif (index_is == -1 and index_currently == -1):\n",
+    "            summary2 = summary[index_was:]\n",
+    "        else :\n",
+    "            index_min = min(index_is, index_was)\n",
+    "            summary2 = summary[index_min:]\n",
+    "            \n",
+    "        # lowercase long string of summary\n",
+    "        summary_lower = summary2.lower()\n",
+    "        # doc object type\n",
+    "        summary_nlp = nlp(summary_lower)\n",
+    "        # type list\n",
+    "        summary_list = [token.text for token in summary_nlp]\n",
+    "        # type list, but without stop words\n",
+    "        summary_token_filtered = [w for w in summary_list if w not in stopwords.words('english')]\n",
+    "        \n",
+    "        # convert to a string separated by spaces\n",
+    "        summary_str = \" \".join(summary_token_filtered) \n",
+    "        summary_nlp = nlp(summary_str)\n",
+    "        women_token_dictionary[name] = summary_nlp\n",
+    "    \n",
+    "#     print(women_token_dictionary)\n",
+    "    return women_token_dictionary"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "women_token_dictionary = build_spacy_token_dictionary(women_summaries, women_names)\n",
+    "# print(women_token_dictionary)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def build_sim_matrix(input_token_dictionary, input_len_names, input_women_names):\n",
+    "    # Builds matrix using spacy that stores each woman's cosine similarity to each other\n",
+    "    \n",
+    "    sim_matrix = np.zeros(shape = (input_len_names, input_len_names))\n",
+    "    \n",
+    "    for woman1 in input_token_dictionary:\n",
+    "        for woman2 in input_token_dictionary:\n",
+    "            woman1_index = input_women_names.index(woman1)\n",
+    "            woman2_index = input_women_names.index(woman2)\n",
+    "#             print(input_token_dictionary[woman1])\n",
+    "#             print(input_token_dictionary[woman2])\n",
+    "            sim_matrix[woman1_index][woman2_index] = input_token_dictionary[woman1].similarity(input_token_dictionary[woman2])\n",
+    "    np.fill_diagonal(sim_matrix, 0)\n",
+    "    \n",
+    "    return sim_matrix\n",
+    "        "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "women2women_cosine_sim_matrix = build_sim_matrix(women_token_dictionary, len(women_names), women_names)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.966672594983\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(women2women_cosine_sim_matrix[1][0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import operator\n",
+    "\n",
+    "# Code taken from A5\n",
+    "def get_ranked_women(input_woman, input_sim_matrix, input_women_names) :\n",
+    "#     print(input_sim_matrix)\n",
+    "    '''Return sorted rankings (most to least similar) of women as \n",
+    "        a list of two-element tuples, where the first element is the \n",
+    "        woman's name and the second element is the similarity score\n",
+    "    '''\n",
+    "    \n",
+    "    # Get index from woman's name\n",
+    "    idx = input_women_names.index(input_woman)\n",
+    "    \n",
+    "    # Get list of similarity scores for woman\n",
+    "    score_lst = input_sim_matrix[idx]\n",
+    "    women_score_lst = [(input_women_names.index(index), s) for index, score in enumerate(score_lst)]\n",
+    "    \n",
+    "    # Do not account for woman herself in ranking\n",
+    "    women_score_lst = women_score_lst[:idx] + women_score_lst[idx+1:]\n",
+    "    \n",
+    "    # Sort rankings by score (most similar to least similar)\n",
+    "    women_score_lst = sorted(women_score_lst, key=lambda x: -x[1])\n",
+    "    \n",
+    "    # Only returning top 5!\n",
+    "    return women_score_lst[:5]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Builds a 'top 5 most similar' list of woman for every woman\n",
+    "def create_top_5_dict_women(input_sim_mat, num_women, input_women_names):\n",
+    "    women_top5 = {}\n",
+    "    \n",
+    "    # Loop through each woman\n",
+    "    for woman in range(num_women):\n",
+    "        similarity_list = get_ranked_women(input_women_names[woman], input_sim_mat, input_women_names)\n",
+    "        women_top5[input_women_names[woman]] = similarity_list\n",
+    "        \n",
+    "    return women_top5\n",
+    "            "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "ValueError",
+     "evalue": "0 is not in list",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-39-df6a99920cda>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mtop5_dict_women2women\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mcreate_top_5_dict_women\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mwomen2women_cosine_sim_matrix\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mlen\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mwomen_names\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mwomen_names\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0;32mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtop5_dict_women2women\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m<ipython-input-38-edf1f2b39351>\u001b[0m in \u001b[0;36mcreate_top_5_dict_women\u001b[0;34m(input_sim_mat, num_women, input_women_names)\u001b[0m\n\u001b[1;32m      5\u001b[0m     \u001b[0;31m# Loop through each woman\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      6\u001b[0m     \u001b[0;32mfor\u001b[0m \u001b[0mwoman\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mrange\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mnum_women\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 7\u001b[0;31m         \u001b[0msimilarity_list\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mget_ranked_women\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0minput_women_names\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mwoman\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minput_sim_mat\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0minput_women_names\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      8\u001b[0m         \u001b[0mwomen_top5\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0minput_women_names\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0mwoman\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m]\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0msimilarity_list\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      9\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m<ipython-input-37-a29d1e9548f2>\u001b[0m in \u001b[0;36mget_ranked_women\u001b[0;34m(input_woman, input_sim_matrix, input_women_names)\u001b[0m\n\u001b[1;32m     14\u001b[0m     \u001b[0;31m# Get list of similarity scores for woman\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     15\u001b[0m     \u001b[0mscore_lst\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0minput_sim_matrix\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0midx\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 16\u001b[0;31m     \u001b[0mwomen_score_lst\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0minput_women_names\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mindex\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mindex\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0ms\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32mfor\u001b[0m \u001b[0mindex\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mscore\u001b[0m \u001b[0;32min\u001b[0m \u001b[0menumerate\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mscore_lst\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     17\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     18\u001b[0m     \u001b[0;31m# Do not account for woman herself in ranking\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mValueError\u001b[0m: 0 is not in list"
+     ]
+    }
+   ],
+   "source": [
+    "top5_dict_women2women = create_top_5_dict_women(women2women_cosine_sim_matrix, len(women_names), women_names)\n",
+    "print(top5_dict_women2women)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def return_query(input_query, input_women_token_dictionary):\n",
+    "    # Given a query string, this function will return a list of women that are most similar to the query\n",
+    "    \n",
+    "    query = nlp(input_query)\n",
+    "    results = [] # List that will eventually store name, similarity, popularity, and ultimate RANKING\n",
+    "    \n",
+    "    # Ranking will be defined by: (1/popularity) + (0.5*similarity) + entity weighting\n",
+    "    \n",
+    "    for woman in input_women_token_dictionary:\n",
+    "        similarity = query.similarity(input_women_token_dictionary[woman])\n",
+    "        if similarity > 0.2: # Arbitrary number, can play around with with\n",
+    "            results.append((woman, similarity, similarity)) # Currently similarity will act as the ranking\n",
+    "            \n",
+    "    results.sort(key=lambda x: x[2]) # Ascending order of rankings\n",
+    "    results.reverse() # Descending order"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "OLD STUFF THAT WE ARE NOT USING ANYMORE"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# def sumWords(text): \n",
+    "#     wordDict = dict()\n",
+    "#     for word in text :\n",
+    "#         if word in wordDict :\n",
+    "#             wordDict[word] = wordDict[word] + 1\n",
+    "#         else :\n",
+    "#             wordDict[word] = 1\n",
+    "#     return (wordDict)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# # create the global variable of what is equivalent to good_types\n",
+    "# unique_word_lst = list()\n",
+    "# for woman in women_dict_1sent :\n",
+    "#     summary = women_dict_1sent[woman]\n",
+    "#     for word in summary :\n",
+    "#         if word not in unique_word_lst :\n",
+    "#             unique_word_lst.append(word)\n",
+    "        "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# # creates a np array where the rows are women according to the list of women names\n",
+    "# # columns are rows according to the list of unique words\n",
+    "# def create_word_freq_array(input_women_dict_1sent, input_women_names, input_num_women, input_unique_word_lst):\n",
+    "#     dict_freq = dict()\n",
+    "\n",
+    "#     for woman in input_women_dict_1sent :\n",
+    "#         dict_freq[woman] = sumWords(input_women_dict_1sent[woman])\n",
+    "    \n",
+    "#     np_with_freq = np.zeros(shape = (len(dict_freq), len(input_unique_word_lst)))\n",
+    "#     i = 0\n",
+    "#     for woman in input_women_names :\n",
+    "# #         print(woman)\n",
+    "#         if woman in dict_freq :\n",
+    "#             j = 0\n",
+    "#             for word in input_unique_word_lst :\n",
+    "#                 if word in dict_freq[woman] :\n",
+    "# #                     print(j)\n",
+    "#                     np_with_freq[i][j] = dict_freq[woman][word]\n",
+    "#                 j = j + 1\n",
+    "#             i = i + 1\n",
+    "# #     print(np_with_freq[0][0])\n",
+    "#     return np_with_freq\n",
+    "# #     print(input_unique_word_lst.index('chogha'))\n",
+    "    \n",
+    "        "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# word_freq_array = create_word_freq_array(women_dict_1sent, women_names, len(women_dict_1sent), unique_word_lst)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# TODO: Need to account for a woman's profile mentioning another woman's name\n",
+    "\n",
+    "# def create_j_sim_mat_women(input_num_women, input_word_freq_array, input_unique_word_lst):\n",
+    "#     arr = np.zeros(shape = (input_num_women, input_num_women))\n",
+    "    \n",
+    "#     for (i, woman1) in enumerate(input_word_freq_array) :\n",
+    "#         for (j, woman2) in enumerate(input_word_freq_array) :\n",
+    "#             s1 = np.nonzero(woman1)\n",
+    "#             s2 = np.nonzero(woman2)\n",
+    "#             intersect = np.intersect1d(s1, s2)\n",
+    "#             union = np.union1d(np.array(s1).flatten(), np.array(s2).flatten())\n",
+    "#             if len(union) > 0 :\n",
+    "#                 arr[i][j] = len(intersect)/len(union)\n",
+    "                \n",
+    "#     np.fill_diagonal(arr, 0)\n",
+    "    \n",
+    "# #     print(np.sum(arr[100:]))\n",
+    "#     return arr\n",
+    "    \n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# j_sim_mat_women = create_j_sim_mat_women(len(women_names), word_freq_array, unique_word_lst)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# import operator\n",
+    "\n",
+    "# # make dictionary of top 5 women for each woman\n",
+    "# def create_top_5_dict_women(j_sim_mat, num_women):\n",
+    "#     women_top5 = {}\n",
+    "#     # Loop through each woman\n",
+    "#     for woman in range(num_women):\n",
+    "#         top_5 = []      \n",
+    "#         min_similarity = (-1, -1)\n",
+    "                \n",
+    "#         for i in range(num_women):\n",
+    "#             if (len(top_5) < 5): # Can just add bc we don't have top 5 yet\n",
+    "#                 top_5.append((i, j_sim_mat[woman][i])) # Stores (index, similarity)\n",
+    "#                 min_similarity = min(top_5, key = lambda t: t[1]) # Grabs tuple with minimum value\n",
+    "#             else: # Only add similarity if it is greater than the minimum similarity\n",
+    "#                 if (j_sim_mat[woman][i] > min_similarity[1]):\n",
+    "#                     top_5.remove(min_similarity) # Remove minimum similarity tuple\n",
+    "#                     top_5.append((i, j_sim_mat[woman][i])) # Stores new (index, similarity)\n",
+    "#                     min_similarity = min(top_5, key = lambda t: t[1]) # Grabs tuple with minimum value\n",
+    "                    \n",
+    "#         # Sort tuple list of top 5\n",
+    "#         top_5.sort(key = operator.itemgetter(1))\n",
+    "#         # Descending order\n",
+    "#         top_5.reverse()\n",
+    "        \n",
+    "#         top_5_names = []\n",
+    "        \n",
+    "#         for k, v in top_5:\n",
+    "#             top_5_names.append(women_names[k])\n",
+    "            \n",
+    "#         # Store woman (key) and list of top 5 most similar (value)\n",
+    "#         women_top5[women_names[woman]] = top_5_names\n",
+    "        \n",
+    "#     return(women_top5)\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# # make dictionary of top 5 women for each word\n",
+    "# def create_top_5_dict_word(word_freq_array, num_words, num_women):\n",
+    "#     word_top5 = {}\n",
+    "#     # Loop through each word\n",
+    "#     for word in range(len(word_freq_array.T)): # Iterates through words first\n",
+    "#         top_5 = []      \n",
+    "#         min_similarity = (-1, 0)\n",
+    "                \n",
+    "#         for i in range(num_women):\n",
+    "#             if (word_freq_array.T[word][i] > min_similarity[1]):\n",
+    "#                 if (len(top_5) < 5):\n",
+    "#                     top_5.append((i, word_freq_array.T[word][i])) # Stores new (index, word count)\n",
+    "#                     min_similarity = min(top_5, key = lambda t: t[1]) # Grabs tuple with minimum value\n",
+    "#                 else:\n",
+    "#                     top_5.remove(min_similarity) # Remove minimum similarity tuple\n",
+    "#                     top_5.append((i, word_freq_array.T[word][i])) # Stores new (index, word count)\n",
+    "#                     min_similarity = min(top_5, key = lambda t: t[1]) # Grabs tuple with minimum value\n",
+    "                    \n",
+    "#         # Sort tuple list of top 5\n",
+    "#         top_5.sort(key = operator.itemgetter(1))\n",
+    "#         # Descending order\n",
+    "#         top_5.reverse()\n",
+    "        \n",
+    "#         top_5_names = []\n",
+    "        \n",
+    "#         for k, v in top_5:\n",
+    "#             top_5_names.append(women_names[k])\n",
+    "            \n",
+    "#         # Store word (key) and list of top 5 most similar (value)\n",
+    "#         word_top5[unique_word_lst[word]] = top_5_names\n",
+    "        \n",
+    "#     return(word_top5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# top_5_dict_women = create_top_5_dict_women(j_sim_mat_women, len(women_names))\n",
+    "# top_5_dict_words = create_top_5_dict_word(word_freq_array, len(unique_word_lst), len(women_names))\n",
+    "# print(top_5_dict_words)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "THIS IS ALL EMPATH STUFF! (it wasn't working)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# def women_categories(input_women_dict_1sent):\n",
+    "#     categories = {}\n",
+    "    \n",
+    "#     for woman in input_women_dict_1sent:\n",
+    "#         list_of_categories = lexicon.create_category(woman, input_women_dict_1sent[woman])\n",
+    "#         categories[woman] = list_of_categories"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'women_dict_1sent' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-5-f134b32aaaeb>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mwomen_categories\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mwomen_categories\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mwomen_dict_1sent\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      2\u001b[0m \u001b[0mprint\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mwomen_categories\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mNameError\u001b[0m: name 'women_dict_1sent' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "# women_categories = women_categories(women_dict_1sent)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# def return_query(query, top_5_dict_words):\n",
+    "#     if query in women_names: # EX: 'is similar to Mary Jackson'\n",
+    "#         return(top_5_dict_women[query])\n",
+    "#     else: # EX: 'worked at NASA'\n",
+    "#         return(top_5_dict_words[query])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Mary Jackson']\n"
+     ]
+    }
+   ],
+   "source": [
+    "#print(return_query('nasa', top_5_dict_words))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# def unique_categories(input_women_categories):\n",
+    "#     # Returns: list of unique string categories\n",
+    "#     categories = []\n",
+    "#     categories_set = set()\n",
+    "#     for woman in input_women_categories:\n",
+    "#         categories_set = categories_set & set(input_women_categories)\n",
+    "        \n",
+    "#     categories = list(categories_set)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# unique_categories = unique_categories(input_women_categories)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# def return_empath_query_categories(query, input_unique_categories):\n",
+    "#     return lexicon.analyze(query, categories=input_unique_categories) # Don't have to normalize for now"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
