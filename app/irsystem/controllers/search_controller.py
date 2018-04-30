@@ -53,7 +53,7 @@ def spacysim_scores(spacy_mat, query, data_dict):
 
 # a list of 30 dictionaries, each dictionary has name, summary, and views
 # [{woman1: "name", summary1: "summary", views1: "views"} ... {woman30: "name", summary30: "summary", views30: "views"}]
-def return_query(cossim_arr, spacysim_arr, data_dict, sorting_mode):
+def return_query(cossim_arr, spacysim_arr, data_dict): #, sorting_mode):
 
     cosine_used = True
     spacy_used = True
