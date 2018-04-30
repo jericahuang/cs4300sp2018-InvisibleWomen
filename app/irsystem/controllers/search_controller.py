@@ -10,6 +10,8 @@ import scipy
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import spacy
+from operator import itemgetter
+
 nlp = spacy.load('en_core_web_md')
 
 reload(sys)
@@ -42,14 +44,13 @@ def spacysim_scores(spacy_mat, query, data_dict):
     return sim_scores
 
 # user_input is a boolean that tells 
-# def sort_views_low(input_lst_dict):
-# 	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
-# 	return newlist
+def sort_views_low(input_lst_dict):
+	input_lst_dict = sorted(input_lst_dict, key = itemgetter('views'))
+	return input_lst_dict
 
-# def sort_views_high(input_lst_dict):
-# 	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
-# 	newlist = sorted(l, key=itemgetter('views'), reverse=True)
-# 	return newlist
+def sort_views_high(input_lst_dict):
+	input_lst_dict = sorted(input_lst_dict, key= itemgetter('views'), reverse=True)
+	return input_lst_dict
 
 # a list of 30 dictionaries, each dictionary has name, summary, and views
 # [{woman1: "name", summary1: "summary", views1: "views"} ... {woman30: "name", summary30: "summary", views30: "views"}]
@@ -77,7 +78,10 @@ def return_query(cossim_arr, spacysim_arr, data_dict): #, sorting_mode):
 
 def search():
 	query = request.args.get('search')
-	sorting_mode = request.args.get('sort by')
+	sorting_mode = request.args.get('sortingmode')
+	
+
+	sorting=sorting_mode # Sorting by most similar
 
 	if not query:
 		data = []
@@ -143,5 +147,13 @@ def search():
 			data[i]["views"] = women_name_to_data[womanname]["views"]
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
+
+	mostviewed_data = sort_views_high(data)
+	leastviewed_data = sort_views_low(data)
+
+	if (sorting=="mostviewed"):
+		data = mostviewed_data
+	elif (sorting == "leastviewed"):
+		data = leastviewed_data
 	
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query)
