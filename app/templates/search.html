@@ -45,7 +45,7 @@
 
     <form class="form-inline global-search">
         {% if data %}
-        <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> 
+        <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> <br>
         <table>
             {% for d in data %}
 
@@ -59,7 +59,7 @@
                 </td>
                 <td>
                     {% if d.similar %}
-                    Similar women
+                    Similar women&nbsp;&nbsp;<a href="/?search=is+similar+to+{{'+'.join(d.name.split(' '))}}" class="similarsearch"><i class="fas fa-search"></a></i>
                     <ol>
                         {% for similars in d.similar %}
                         <li>{{similars}}</li>

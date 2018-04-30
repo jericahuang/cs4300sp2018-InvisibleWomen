@@ -31,16 +31,16 @@
     right: 2%;
 }
 
-#homelink,.wikilink, #homelink:visited,.wikilink:visited{
+#homelink,.wikilink, #homelink:visited,.wikilink:visited, .similarsearch, .similarsearch:visited{
     text-decoration: none;
     text-transform: none;
     color:#fff;
 }
-#homelink:hover,.wikilink:hover{
+#homelink:hover,.wikilink:hover, .similarsearch:hover{
     color:#ddd;
     text-decoration: none;
 }
-#homelink:active,.wikilink:active{
+#homelink:active,.wikilink:active, .similarsearch:active{
     color:#ddd;
     text-decoration: none;
 }
