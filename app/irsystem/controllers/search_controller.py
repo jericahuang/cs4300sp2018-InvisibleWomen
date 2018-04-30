@@ -29,17 +29,20 @@ matx = pickle.load(pkl_file)
 spacy_array = pickle.load(pkl_file_spacy)
 
 
-
+# From functions, calculates cossim
 def cossim_scores(vectorizer, matx, query, data_dict):
     q_vec = vectorizer.transform([query])
     sim_doc_scores = cosine_similarity(q_vec, matx)
     return sim_doc_scores[0]
 
+# 
 def spacysim_scores(spacy_mat, query, data_dict):
     q = nlp(query)
     sim_scores = np.dot(spacy_mat, q.vector)/((np.linalg.norm(spacy_mat)*np.linalg.norm(q.vector))+1)
     return sim_scores
 
+# a list of 30 dictionaries, each dictionary has name, summary, and views
+# [{woman1: "name", summary1: "summary", views1: "views"} ... {woman30: "name", summary30: "summary", views30: "views"}]
 def return_query(cossim_arr, spacysim_arr, data_dict):
 
     cosine_used = True
@@ -54,6 +57,11 @@ def return_query(cossim_arr, spacysim_arr, data_dict):
     for hit in sim_docs[0:30]:
         return_docs.append(data_dict[hit])
     return return_docs, cosine_used, spacy_used
+
+# user_input is a boolean that tells 
+def sort_views(user_input, return_query_dict) :
+	# true 
+	user_input = True
 
 
 @irsystem.route('/', methods=['GET'])
