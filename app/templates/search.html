@@ -1,24 +1,16 @@
 <html>
 
 <head>
-
+    <title>Invisible Women</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-    <title>Invisible Women</title>
-    <link rel="icon" type="image/png" href="/static/gracehopper.png">      
+    <link rel="icon" type="image/png" href="/static/gracehopper.png">
+    <script src="/static/scripts.js"></script>
 </head>
 
-<script>
-    function convertName(name) {
-        var replaced = name.split(' ').join('+');
-        return replaced;
-    }
-     $(function () {
-        $("[rel='tooltip']").tooltip();
-    });
-</script>
 
 <body style="background:url('https://img00.deviantart.net/da64/i/2008/306/e/b/starry_sky_stock_by_budgie.jpg')">
     <div class="topcorner">
@@ -40,68 +32,56 @@
             <!--<input id="input" type="text" name="search" class="form-control" placeholder="e.g. worked at NASA">-->
             <input id="input" type="text" name="search" minlength="5" placeholder="e.g. is a physicist">
         </div>
-        <button type="submit" class="btn btn-info"> Go! </button>
+        <!--        <button type="submit" class="btn btn-info"> Go! </button>-->
     </form>
 
     <form class="form-inline global-search">
         {% if data %}
-        <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1> <br>
-        <table>
-            {% for d in data %}
+        <h1 style="font-size: 28px; font-family:Futura; color: #fff">{{output_message}}</h1>
+        <br>
 
-            {% if d.name %}
+        <table>
+            {% for d in data %} {% if d.name %}
+
+
             <tr>
-                <td class="bio">
-                    <span class="name"><a href="{{d.url}}" class="wikilink" target="_blank">{{d.name}}</a></span><span class="views">
-                        <i class="fas fa-eye" title="Wikipedia views over the past week"></i>&nbsp;&nbsp;{{d.views}}</span>
-                    <br>
-                    <span class="summary">{{d.summary}}</span>
-                </td>
-                <td>
-                    {% if d.similar %}
-                    Similar women&nbsp;&nbsp;<a href="/?search=is+similar+to+{{'+'.join(d.name.split(' '))}}" class="similarsearch"><i class="fas fa-search"></a></i>
-                    <ol>
-                        {% for similars in d.similar %}
-                        {% if similars.name %}
-                        <li>{{similars.name}}</li>
-                        {% else %}
-                        <li>{{similars}}</li>
+                <div id="test">
+                    <td class="bio">
+                        <span class="name"><a href="{{d.url}}" class="wikilink" target="_blank">{{d.name}}</a></span><span class="views">
+                        <i class="fas fa-eye" id="icon" title="Wikipedia views over the past week"></i>&nbsp;&nbsp;{{d.views}}</span>
+                        <br>
+                        <span class="summary">{{d.summary}}</span>
+                    </td>
+
+                    <td>
+                        {% if d.similar %} Similar women&nbsp;&nbsp;<a href="/?search=is+similar+to+{{'+'.join(d.name.split(' '))}}" class="similarsearch"><i class="fas fa-search"></a></i>
+                        <ol>
+                            {% for similars in d.similar %} {% if similars.name %}
+                            <li>{{similars.name}}</li>
+                            {% else %}
+                            <li>{{similars}}</li>
+                            {% endif %} {% endfor %}
+                        </ol>
                         {% endif %}
-                        {% endfor %} 
-                    </ol>
-                    {% endif %}
-                </td>
+                    </td>
+                </div>
             </tr>
 
             {% else %}
             <p style="font-size: 20px; font-family:Futura; color: #fff">
                 {{d}}
             </p>
-            {% endif %}
-        
-        {% endfor %} 
+            {% endif %} {% endfor %}
         </table>
+
         {% endif %}
     </form>
 
     <div id="bottomcorner">
         {% if data %}
-        <img src="/static/gracehopper.png" height=200 draggable=false>
-        {% else %}
-        <img src="/static/gracehopper-info.png" height=700 draggable=false>
-        {% endif %}
+        <img src="/static/gracehopper.png" height=200 draggable=false> {% else %}
+        <img src="/static/gracehopper-info.png" height=700 draggable=false> {% endif %}
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E=" crossorigin="anonymous"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("button").click(function () {
-            $("#bottomcorner").fadeOut();
-        });
-    });
-    $(document).ready(function(){
-    $('.tooltipped').tooltip({delay: 50});
-  });
-</script>
 
 </html>
