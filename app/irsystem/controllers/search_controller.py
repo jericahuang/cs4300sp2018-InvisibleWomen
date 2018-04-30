@@ -12,10 +12,10 @@ import numpy as np
 import spacy
 from operator import itemgetter
 
-nlp = spacy.load('en_core_web_md')
-import en_core_web_md
-nlp = en_core_web_md.load()
 #nlp = spacy.load('en_core_web_md')
+import en_core_web_sm
+nlp = en_core_web_sm.load()
+#nlp = spacy.load('en_core_web_sm')
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
