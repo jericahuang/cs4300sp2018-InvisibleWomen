@@ -41,9 +41,19 @@ def spacysim_scores(spacy_mat, query, data_dict):
     sim_scores = np.dot(spacy_mat, q.vector)/((np.linalg.norm(spacy_mat)*np.linalg.norm(q.vector))+1)
     return sim_scores
 
+# user_input is a boolean that tells 
+def sort_views_low(input_lst_dict):
+	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
+	return newlist
+
+def sort_views_high(input_lst_dict):
+	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
+	newlist = sorted(l, key=itemgetter('views'), reverse=True)
+	return newlist
+
 # a list of 30 dictionaries, each dictionary has name, summary, and views
 # [{woman1: "name", summary1: "summary", views1: "views"} ... {woman30: "name", summary30: "summary", views30: "views"}]
-def return_query(cossim_arr, spacysim_arr, data_dict):
+def return_query(cossim_arr, spacysim_arr, data_dict, sorting_mode):
 
     cosine_used = True
     spacy_used = True
@@ -56,27 +66,25 @@ def return_query(cossim_arr, spacysim_arr, data_dict):
     return_docs = []
     for hit in sim_docs[0:30]:
         return_docs.append(data_dict[hit])
+    if (sorting_mode == 1) :
+    	return_docs = sort_views_low(return_docs)
+    elif (sorting_mode == 2) :
+    	return_docs = sort_views_high(return_docs)
     return return_docs, cosine_used, spacy_used
-
-# user_input is a boolean that tells 
-def sort_views(user_input, return_query_dict) :
-	# true 
-	user_input = True
-
+    
 
 @irsystem.route('/', methods=['GET'])
 
 def search():
 	query = request.args.get('search')
+	sorting_mode = request.args.get('sort by')
+
 	if not query:
 		data = []
 		output_message = ''
 	else:
-<<<<<<< HEAD
 		output_message = "You searched for a woman who " + query + "."
-=======
 		output_message = query
->>>>>>> 812bf2ccdfcedf0ff29c4d2ca46d59414b116805
 		q_vec = vectorizer.transform([query])
 
 		if "is similar to " in query:
@@ -96,7 +104,6 @@ def search():
 				data = ["Sorry - we did not find a result matching that query."]
 				
 		else:
-<<<<<<< HEAD
 			s = spacysim_scores(spacy_array, query, deduped_women)
 			c = cossim_scores(vectorizer, matx, query, deduped_women)
 			data_tuple = return_query(c, s, deduped_women)
@@ -104,12 +111,12 @@ def search():
 			if data_tuple[1] == False:
 				# This means that cosine sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
-				output_message += "<br />" + "We don't have the exact result you were looking for, but we've done our best to find possible related results."
+				output_message += "/n" + "<br>" + "We don't have the exact result you were looking for, but we've done our best to find possible related results."
 			if data_tuple[2] == False:
 				# This means that spacy sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
 				data = ["No results :("]
-=======
+
 			sim_doc_scores = cosine_similarity(q_vec, matx)
 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
 			data = []
@@ -122,7 +129,6 @@ def search():
 			
 			if len(data)==0:	
 				data = ["Sorry - we did not find a result matching that query."]
->>>>>>> 812bf2ccdfcedf0ff29c4d2ca46d59414b116805
 	
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
 		for i in range(len(data)):
