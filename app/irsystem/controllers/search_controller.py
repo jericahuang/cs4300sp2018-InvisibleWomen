@@ -54,7 +54,7 @@ def search():
 			sim_doc_scores = cosine_similarity(q_vec, matx)
 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
 			data = []
-			print sim_docs
+#			print sim_docs
 			for hit in sim_docs:
 				if sim_doc_scores[0][hit] > 0:
 					data.append(deduped_women[hit])
@@ -71,7 +71,7 @@ def search():
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
 	elif data != ["No results :("] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
-		print data
+#		print data
 		for i in range(len(data)):
 			womanname=data[i]["name"]
 			data[i]["views"] = women_name_to_data[womanname]["views"]

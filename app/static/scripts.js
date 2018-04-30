@@ -16,5 +16,5 @@ $(document).ready(function () {
         r = Math.floor(Math.random() * list.length);
     $('#input').prop('placeholder', list[r]);
 
-    
+    $("#test").addClass("load");
 });
