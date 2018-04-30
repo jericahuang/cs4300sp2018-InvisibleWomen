@@ -156,7 +156,7 @@ def search():
 
 	if (sorting=="mostviewed"):
 		data = mostviewed_data
-	elif (sorting == "leastviewed"):
+	if (sorting == "leastviewed"):
 		data = leastviewed_data
 	
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query)
