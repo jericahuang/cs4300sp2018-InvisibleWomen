@@ -9,6 +9,9 @@ import pickle
 import scipy
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import spacy
+nlp = spacy.load('en_core_web_md')
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -19,9 +22,39 @@ top_5_dict_words = pickle.load( open( "top_5_dict_words.pickle", "rb" ) )
 top_5_dict_women = pickle.load( open( "top_5_dict_women.pickle", "rb" ) )
 women_name_to_data = pickle.load( open( "women_name_to_data.pickle", "rb" ) )
 deduped_women = pickle.load( open( "deduped_women-search.pickle", "rb" ) )
+pkl_file_spacy = open('spacyarray.pickle', 'rb')
 pkl_file = open('myvectorizer.pickle', 'rb')
 vectorizer = pickle.load(pkl_file)
 matx = pickle.load(pkl_file)
+spacy_array = pickle.load(pkl_file_spacy)
+
+
+
+def cossim_scores(vectorizer, matx, query, data_dict):
+    q_vec = vectorizer.transform([query])
+    sim_doc_scores = cosine_similarity(q_vec, matx)
+    return sim_doc_scores[0]
+
+def spacysim_scores(spacy_mat, query, data_dict):
+    q = nlp(query)
+    sim_scores = np.dot(spacy_mat, q.vector)/((np.linalg.norm(spacy_mat)*np.linalg.norm(q.vector))+1)
+    return sim_scores
+
+def return_query(cossim_arr, spacysim_arr, data_dict):
+
+    cosine_used = True
+    spacy_used = True
+    if max(cossim_arr) == 0:
+        cosine_used = False
+    if max(spacysim_arr) == 0:
+        spacy_used = False
+    weighted_scores = cossim_arr*0.7 + spacysim_arr*0.3
+    sim_docs = np.argsort(weighted_scores)[::-1]
+    return_docs = []
+    for hit in sim_docs[0:30]:
+        return_docs.append(data_dict[hit])
+    return return_docs, cosine_used, spacy_used
+
 
 @irsystem.route('/', methods=['GET'])
 
@@ -31,7 +64,7 @@ def search():
 		data = []
 		output_message = ''
 	else:
-		output_message = "You searched for a woman who " + query
+		output_message = "You searched for a woman who " + query + "."
 		q_vec = vectorizer.transform([query])
 
 		if "is similar to " in query:
@@ -51,17 +84,17 @@ def search():
 				data = ["We don't have data on that person. :( Check back soon!"]
 				
 		else:
-			sim_doc_scores = cosine_similarity(q_vec, matx)
-			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
-			data = []
-			print sim_docs
-			for hit in sim_docs:
-				if sim_doc_scores[0][hit] > 0:
-					data.append(deduped_women[hit])
-			if len(data)>30:
-				data = data[:30]
-			
-			if len(data)==0:	
+			s = spacysim_scores(spacy_array, query, deduped_women)
+			c = cossim_scores(vectorizer, matx, query, deduped_women)
+			data_tuple = return_query(c, s, deduped_women)
+			data = list(data_tuple[0])
+			if data_tuple[1] == False:
+				# This means that cosine sim was not used
+				# PRINT SOMETHING HERE ? (HOW?)
+				output_message += "<br />" + "We don't have the exact result you were looking for, but we've done our best to find possible related results."
+			if data_tuple[2] == False:
+				# This means that spacy sim was not used
+				# PRINT SOMETHING HERE ? (HOW?)
 				data = ["No results :("]
 	
 	if data != ["No results :("] and data != ["We don't have data on that person. :( Check back soon!"] and len(data)>0 and type(data[0]) is not dict:
