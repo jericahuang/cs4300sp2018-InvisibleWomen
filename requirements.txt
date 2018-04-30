@@ -77,3 +77,4 @@ wcwidth==0.1.7
 Werkzeug==0.14.1
 wrapt==1.10.11
 yarg==0.1.9
+https://github.com/explosion/spacy-models/releases/download/en_core_web_md-2.0.0/en_core_web_md-2.0.0.tar.gz
