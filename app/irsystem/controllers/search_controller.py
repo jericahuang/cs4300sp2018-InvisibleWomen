@@ -10,7 +10,9 @@ import scipy
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import spacy
-nlp = spacy.load('en_core_web_md')
+import en_core_web_md
+nlp = en_core_web_md.load()
+#nlp = spacy.load('en_core_web_md')
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
