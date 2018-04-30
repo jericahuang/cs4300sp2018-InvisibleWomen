@@ -64,7 +64,11 @@ def search():
 		data = []
 		output_message = ''
 	else:
+<<<<<<< HEAD
 		output_message = "You searched for a woman who " + query + "."
+=======
+		output_message = query
+>>>>>>> 812bf2ccdfcedf0ff29c4d2ca46d59414b116805
 		q_vec = vectorizer.transform([query])
 
 		if "is similar to " in query:
@@ -73,7 +77,7 @@ def search():
 			if woman in top_5_dict_women:
 				data = top_5_dict_women[woman]
 			else:
-				data = ["We don't have data on that person. :( Check back soon!"]
+				data = ["Sorry - we did not find a result matching that query."]
 				
 		elif "is like " in query:
 			woman = query.split("is like ")[1]
@@ -81,9 +85,10 @@ def search():
 			if woman in top_5_dict_women:
 				data = top_5_dict_women[woman]
 			else:
-				data = ["We don't have data on that person. :( Check back soon!"]
+				data = ["Sorry - we did not find a result matching that query."]
 				
 		else:
+<<<<<<< HEAD
 			s = spacysim_scores(spacy_array, query, deduped_women)
 			c = cossim_scores(vectorizer, matx, query, deduped_women)
 			data_tuple = return_query(c, s, deduped_women)
@@ -96,14 +101,28 @@ def search():
 				# This means that spacy sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
 				data = ["No results :("]
+=======
+			sim_doc_scores = cosine_similarity(q_vec, matx)
+			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
+			data = []
+#			print sim_docs
+			for hit in sim_docs:
+				if sim_doc_scores[0][hit] > 0:
+					data.append(deduped_women[hit])
+			if len(data)>30:
+				data = data[:30]
+			
+			if len(data)==0:	
+				data = ["Sorry - we did not find a result matching that query."]
+>>>>>>> 812bf2ccdfcedf0ff29c4d2ca46d59414b116805
 	
-	if data != ["No results :("] and data != ["We don't have data on that person. :( Check back soon!"] and len(data)>0 and type(data[0]) is not dict:
+	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
 		for i in range(len(data)):
 			womanname=data[i]
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
-	elif data != ["No results :("] and data != ["We don't have data on that person. :( Check back soon!"] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
+	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
 		print data
 		for i in range(len(data)):
 			womanname=data[i]["name"]

@@ -142,7 +142,7 @@ input:required:invalid {
 table {
     color: #fff;
     font-family: Futura;
-    font-size: 20px;
+    font-size: 14px;
     display: table;
     margin: auto;
     width: 90%;
@@ -156,7 +156,7 @@ tr {
 }
 
 .name {
-    font-size: 20px;
+    font-size: 24px;
     display: inline-block;
 }
 
@@ -183,6 +183,6 @@ td {
 }
 
 ol {
-    font-size: 15px;
+    font-size: 14px;
     color: #ddd;
 }
