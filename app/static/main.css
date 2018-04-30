@@ -72,12 +72,13 @@
 }
 
 #contact-form {
-    max-width: 90%;
+    max-width: 100%;
     margin: 0 auto;
 }
 
 textarea,
 input {
+    width: 500px;
     border: none;
     outline: none;
     border-radius: 0;
