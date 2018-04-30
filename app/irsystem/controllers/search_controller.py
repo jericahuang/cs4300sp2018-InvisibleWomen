@@ -111,8 +111,8 @@ def search():
 			if data_tuple[1] == False:
 				# This means that cosine sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
-				output_message += "/n" + "<br>" + "We don't have the exact result you were looking for, but we've done our best to find possible related results."
-			if data_tuple[2] == False:
+				data = ["We don't have the exact result you were looking for, but we've done our best to find possible related results."]
+			elif data_tuple[2] == False:
 				# This means that spacy sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
 				data = ["No results :("]
@@ -137,11 +137,11 @@ def search():
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
-		print data
+#		print data
 		for i in range(len(data)):
 			womanname=data[i]["name"]
 			data[i]["views"] = women_name_to_data[womanname]["views"]
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
 	
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query)
