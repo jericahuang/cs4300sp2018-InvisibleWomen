@@ -31,17 +31,28 @@
     right: 2%;
 }
 
-#homelink,.wikilink, #homelink:visited,.wikilink:visited, .similarsearch, .similarsearch:visited{
+#homelink,
+.wikilink,
+#homelink:visited,
+.wikilink:visited,
+.similarsearch,
+.similarsearch:visited {
     text-decoration: none;
     text-transform: none;
-    color:#fff;
+    color: #FFDF00;
 }
-#homelink:hover,.wikilink:hover, .similarsearch:hover{
-    color:#ddd;
-    text-decoration: none;
+
+#homelink:hover,
+.wikilink:hover,
+.similarsearch:hover {
+    color: #FFDF00;
+    text-decoration: underline;
 }
-#homelink:active,.wikilink:active, .similarsearch:active{
-    color:#ddd;
+
+#homelink:active,
+.wikilink:active,
+.similarsearch:active {
+    color: grey;
     text-decoration: none;
 }
 
@@ -61,12 +72,13 @@
 }
 
 #contact-form {
-    max-width: 90%;
+    max-width: 100%;
     margin: 0 auto;
 }
 
 textarea,
 input {
+    width: 500px;
     border: none;
     outline: none;
     border-radius: 0;
@@ -127,43 +139,50 @@ input:required:invalid {
     color: rgba(255, 255, 255, 0.5);
 }
 
-table{
-    color:#fff;
-    font-family:Futura;
+table {
+    color: #fff;
+    font-family: Futura;
     font-size: 20px;
-    border-collapse: collapse;
-    display: block;
-    margin:auto;
-    width:90%;
+    display: table;
+    margin: auto;
+    width: 90%;
+    border-collapse: separate;
+    border-spacing: 30px;
 }
-tr{
-    padding:10px 20px;
+
+tr {
+    background-color: rgba(255, 255, 255, .4);
+    color: rgba(255, 255, 255, .4);
 }
-.name{
+
+.name {
     font-size: 20px;
     display: inline-block;
 }
-.summary{
-    font-size:14px;
-    color:#ddd;
+
+.summary {
+    font-size: 14px;
+    color: #ddd;
 }
-.views{
+
+.views {
     display: inline-block;
-    margin-left:50px;
-    color:#aaa;
-    font-size:14px;
+    margin-left: 50px;
+    color: #aaa;
+    font-size: 14px;
 }
-td.bio{
-    width:70%;
-    margin:20px;
+
+td.bio {
+    width: 70%;
+    margin: 20px;
 }
-td{
+
+td {
     display: inline-block;
+    padding: 10px 10px 10px 10px;
 }
-tr{
-    display: block;
-}
-ol{
+
+ol {
     font-size: 15px;
-    color:#ddd;
+    color: #ddd;
 }
