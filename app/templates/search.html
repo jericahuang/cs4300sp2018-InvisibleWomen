@@ -62,7 +62,11 @@
                     Similar women&nbsp;&nbsp;<a href="/?search=is+similar+to+{{'+'.join(d.name.split(' '))}}" class="similarsearch"><i class="fas fa-search"></a></i>
                     <ol>
                         {% for similars in d.similar %}
+                        {% if similars.name %}
+                        <li>{{similars.name}}</li>
+                        {% else %}
                         <li>{{similars}}</li>
+                        {% endif %}
                         {% endfor %} 
                     </ol>
                     {% endif %}
