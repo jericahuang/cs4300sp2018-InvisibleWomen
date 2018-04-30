@@ -31,7 +31,7 @@ def search():
 		data = []
 		output_message = ''
 	else:
-		output_message = "You searched for a woman who " + query
+		output_message = query
 		q_vec = vectorizer.transform([query])
 
 		if "is similar to " in query:
