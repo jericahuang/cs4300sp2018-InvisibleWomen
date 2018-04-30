@@ -12,10 +12,11 @@ import numpy as np
 import spacy
 from operator import itemgetter
 
+import en_core_web_md
+nlp = spacy.load('en_core_web_md')
+#import en_core_web_sm
+#nlp = en_core_web_sm.load()
 #nlp = spacy.load('en_core_web_md')
-import en_core_web_sm
-nlp = en_core_web_sm.load()
-#nlp = spacy.load('en_core_web_sm')
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -136,20 +137,17 @@ def search():
 			
 			if len(data)==0:	
 				data = ["Sorry - we did not find a result matching that query."]
-		mostviewed_data = sort_views_high(data)
-		leastviewed_data = sort_views_low(data)
-
-		if (sorting=="mostviewed"):
-			data = mostviewed_data
-		if (sorting == "leastviewed"):
-			data = leastviewed_data
+                
 	
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
+        
 		for i in range(len(data)):
 			womanname=data[i]
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
+        
+            
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
 #		print data
 		for i in range(len(data)):
@@ -158,5 +156,11 @@ def search():
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
 
+#    mostviewed_data = sort_views_high(data)
+#    leastviewed_data = sort_views_low(data)
+#    if (sorting=="mostviewed"):
+#        data = mostviewed_data
+#    if (sorting == "leastviewed"):
+#        data = leastviewed_data        
 	
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query)
