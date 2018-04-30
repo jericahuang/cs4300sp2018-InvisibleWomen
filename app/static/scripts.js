@@ -10,4 +10,5 @@ $(document).ready(function () {
         $("#bottomcorner").fadeOut();
     });
 
+    $('.tip').tipr();
 });
