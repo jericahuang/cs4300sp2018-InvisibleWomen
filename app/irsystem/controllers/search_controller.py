@@ -42,14 +42,14 @@ def spacysim_scores(spacy_mat, query, data_dict):
     return sim_scores
 
 # user_input is a boolean that tells 
-def sort_views_low(input_lst_dict):
-	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
-	return newlist
+# def sort_views_low(input_lst_dict):
+# 	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
+# 	return newlist
 
-def sort_views_high(input_lst_dict):
-	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
-	newlist = sorted(l, key=itemgetter('views'), reverse=True)
-	return newlist
+# def sort_views_high(input_lst_dict):
+# 	newlist = sorted(input_lst_dict, key=lambda k: k['views'])
+# 	newlist = sorted(l, key=itemgetter('views'), reverse=True)
+# 	return newlist
 
 # a list of 30 dictionaries, each dictionary has name, summary, and views
 # [{woman1: "name", summary1: "summary", views1: "views"} ... {woman30: "name", summary30: "summary", views30: "views"}]
@@ -66,10 +66,10 @@ def return_query(cossim_arr, spacysim_arr, data_dict, sorting_mode):
     return_docs = []
     for hit in sim_docs[0:30]:
         return_docs.append(data_dict[hit])
-    if (sorting_mode == 1) :
-    	return_docs = sort_views_low(return_docs)
-    elif (sorting_mode == 2) :
-    	return_docs = sort_views_high(return_docs)
+    # if (sorting_mode == 1) :
+    # 	return_docs = sort_views_low(return_docs)
+    # elif (sorting_mode == 2) :
+    # 	return_docs = sort_views_high(return_docs)
     return return_docs, cosine_used, spacy_used
     
 
