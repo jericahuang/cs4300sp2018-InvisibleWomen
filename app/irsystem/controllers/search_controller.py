@@ -98,7 +98,7 @@ def return_query(cossim_arr, spacysim_arr):
 @irsystem.route('/', methods=['GET'])
 
 def search():
-	query = request.args.get('search').strip()
+	query = request.args.get('search')
 	sorting_mode = request.args.get('sortingmode')
 	sim_msg = ""
 
@@ -108,6 +108,7 @@ def search():
 		data = []
 		output_message = ''
 	else:
+		query = query.strip()
 		output_message = query
 
 		if "is similar to " in query:
