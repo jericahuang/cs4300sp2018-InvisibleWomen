@@ -122,7 +122,7 @@ def search():
 		data = []
 		output_message = ''
 	else:
-		query = query.strip()
+		query = " ".join(query.strip().split())
 		output_message = query
 
 		if query.upper() in upper_names_to_official: #query matches a woman's name
