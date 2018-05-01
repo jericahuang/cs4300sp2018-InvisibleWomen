@@ -53,7 +53,7 @@
         </div>
         <!--        <button type="submit" class="btn btn-info"> Go! </button>-->
     </form>
-s
+
     <form class="form-inline global-search">
         {% if data %}
         <h1 style="font-size: 28px; font-family:Futura; color:#C0C0C0">You searched for a woman who 
@@ -61,8 +61,13 @@ s
             <br><br>
 <!--            <i>{{output_message}}</i>-->
         </h1>
-        <br>
+            <center>
+            <p style="font-size: 20px; font-family:Futura; color: #fff">
+                {{sim_msg}}
+            </p>
+            </center>
 
+        <br>
         <!-- Can change color later -->
         <form id="sorting">
             <span id="sort-by"> Sort by: </span>

@@ -88,7 +88,7 @@ def return_query(cossim_arr, spacysim_arr, data_dict): #, sorting_mode):
 def search():
 	query = request.args.get('search')
 	sorting_mode = request.args.get('sortingmode')
-	
+	sim_msg = ""
 
 	sorting=sorting_mode # Sorting by most similar
 
@@ -131,7 +131,7 @@ def search():
 			if data_tuple[1] == False:
 				# This means that cosine sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
-				sim_msg = "We don't have the exact result you were looking for, but we've done our best to find possible related results."
+				sim_msg = "We don't have the exact result you were looking for, but we've done our best to find related results."
 			if data_tuple[2] == False:
 				# This means that spacy sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
