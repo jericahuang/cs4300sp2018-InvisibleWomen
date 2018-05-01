@@ -158,12 +158,13 @@ def search():
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
 
-		# mostviewed_data = sort_views_high(data)
-		# leastviewed_data = sort_views_low(data)
-		# if (sorting=="mostviewed"):
-		# 	data = mostviewed_data
-		# if (sorting == "leastviewed"):
-		# 	data = leastviewed_data
+		mostviewed_data = sort_views_high(data)
+		leastviewed_data = sort_views_low(data)
+		if (sorting == "mostviewed"):
+			data = mostviewed_data
+		if (sorting == "leastviewed"):
+			data = leastviewed_data
+
             
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
 #		print data
@@ -173,17 +174,11 @@ def search():
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
 
-		# mostviewed_data = sort_views_high(data)
-		# leastviewed_data = sort_views_low(data)
-		# if (sorting=="mostviewed"):
-		# 	data = mostviewed_data
-		# if (sorting == "leastviewed"):
-		# 	data = leastviewed_data
-	if (len(data) > 0 and data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."]) :
 		mostviewed_data = sort_views_high(data)
 		leastviewed_data = sort_views_low(data)
 		if (sorting == "mostviewed"):
 			data = mostviewed_data
 		if (sorting == "leastviewed"):
 			data = leastviewed_data
+		
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, sortingmode=sorting, sim_msg=sim_msg)
