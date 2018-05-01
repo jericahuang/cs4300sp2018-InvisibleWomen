@@ -164,10 +164,15 @@ def search():
 
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0:	
 		for i in range(len(data)):
-			womanname=data[i]["name"]
-			data[i]["views"] = women_name_to_data[womanname]["views"]
-			data[i]["similar"] = top_5_dict_women[womanname]
-			data[i]["url"] = women_name_to_data[womanname]["url"]
+			if not isinstance(data[i], dict): #list consists of strings
+				womanname=data[i]	
+				data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}	
+				data[i]["similar"] = top_5_dict_women[womanname]
+			else: #list consists of dicts
+				womanname=data[i]["name"]
+				data[i]["views"] = women_name_to_data[womanname]["views"]
+				data[i]["similar"] = top_5_dict_women[womanname]
+				data[i]["url"] = women_name_to_data[womanname]["url"]
 
 	if (len(data) > 1 and data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."]) :
 		mostviewed_data = sort_views_high(data)
