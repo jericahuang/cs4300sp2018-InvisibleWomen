@@ -186,6 +186,12 @@ ol {
     font-size: 14px;
     color: #ddd;
 }
+h4 a{
+    color: #ffef7f;
+}
+h4 a:hover, h4 a:active, h4 a:focus{
+    color: #ffdf00;
+}
 .fa-star{
     color:#fff;
 }
