@@ -132,7 +132,7 @@ def search():
 				data = ["Sorry - we did not find a result matching that query."]
 				
 		elif "is like " in query:
-			woman = query.split("is similar to ")[1].upper()
+			woman = query.split("is like ")[1].upper()
 			if woman in top_5_dict_women_upperkeys:
 				data = top_5_dict_women_upperkeys[woman]
 			else:
