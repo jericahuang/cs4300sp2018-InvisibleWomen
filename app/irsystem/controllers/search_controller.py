@@ -98,7 +98,7 @@ def return_query(cossim_arr, spacysim_arr):
 @irsystem.route('/', methods=['GET'])
 
 def search():
-	query = request.args.get('search')
+	query = request.args.get('search').strip()
 	sorting_mode = request.args.get('sortingmode')
 	sim_msg = ""
 
@@ -111,14 +111,14 @@ def search():
 		output_message = query
 
 		if "is similar to " in query:
-			woman = query.split("is similar to ")[1].upper()
+			woman = query.split("is similar to ")[1].upper().strip()
 			if woman in top_5_dict_women_upperkeys:
 				data = top_5_dict_women_upperkeys[woman]
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
 		elif "is like " in query:
-			woman = query.split("is similar to ")[1].upper()
+			woman = query.split("is similar to ")[1].upper().strip()
 			if woman in top_5_dict_women_upperkeys:
 				data = top_5_dict_women_upperkeys[woman]
 			else:
