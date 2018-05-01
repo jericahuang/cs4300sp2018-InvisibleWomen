@@ -12,8 +12,8 @@ import numpy as np
 import spacy
 from operator import itemgetter
 
-import en_core_web_md
-nlp = spacy.load('en_core_web_md')
+import en_core_web_sm
+nlp = spacy.load('en_core_web_sm')
 #import en_core_web_sm
 #nlp = en_core_web_sm.load()
 #nlp = spacy.load('en_core_web_md')
@@ -33,6 +33,7 @@ pkl_file = open('myvectorizer.pickle', 'rb')
 vectorizer = pickle.load(pkl_file)
 matx = pickle.load(pkl_file)
 spacy_array = pickle.load(pkl_file_spacy)
+sim_msg = "" # Message returned if cosine sim fails
 
 
 # From functions, calculates cossim
@@ -49,11 +50,15 @@ def spacysim_scores(spacy_mat, query, data_dict):
 
 # user_input is a boolean that tells 
 def sort_views_low(input_lst_dict):
-	input_lst_dict = sorted(input_lst_dict, key = itemgetter('views'))
+	length = len(input_lst_dict)
+	if (length > 0) : 
+		input_lst_dict = sorted(input_lst_dict, key = itemgetter('views'), reverse = False)
 	return input_lst_dict
 
 def sort_views_high(input_lst_dict):
-	input_lst_dict = sorted(input_lst_dict, key= itemgetter('views'), reverse=True)
+	length = len(input_lst_dict)
+	if (length > 0) : 
+		input_lst_dict = sorted(input_lst_dict, key= itemgetter('views'), reverse=True)
 	return input_lst_dict
 
 # a list of 30 dictionaries, each dictionary has name, summary, and views
@@ -100,6 +105,12 @@ def search():
 			woman = woman.title()
 			if woman in top_5_dict_women:
 				data = top_5_dict_women[woman]
+				# mostviewed_data = sort_views_high(data)
+				# leastviewed_data = sort_views_low(data)
+				# if (sorting=="mostviewed"):
+				# 	data = mostviewed_data
+				# if (sorting == "leastviewed"):
+				# 	data = leastviewed_data
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
@@ -108,6 +119,7 @@ def search():
 			woman = woman.title()
 			if woman in top_5_dict_women:
 				data = top_5_dict_women[woman]
+				# You can insert most/least here w/o breaking code
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
@@ -119,24 +131,23 @@ def search():
 			if data_tuple[1] == False:
 				# This means that cosine sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
-				data = ["We don't have the exact result you were looking for, but we've done our best to find possible related results."]
-			elif data_tuple[2] == False:
+				sim_msg = "We don't have the exact result you were looking for, but we've done our best to find possible related results."
+			if data_tuple[2] == False:
 				# This means that spacy sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
 				data = ["No results :("]
 
-			sim_doc_scores = cosine_similarity(q_vec, matx)
-			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
-			data = []
-#			print sim_docs
-			for hit in sim_docs:
-				if sim_doc_scores[0][hit] > 0:
-					data.append(deduped_women[hit])
-			if len(data)>30:
-				data = data[:30]
-			
-			if len(data)==0:	
-				data = ["Sorry - we did not find a result matching that query."]
+# 			sim_doc_scores = cosine_similarity(q_vec, matx)
+# 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
+# 			data = []
+# #			print sim_docs
+# 			for hit in sim_docs:
+# 				if sim_doc_scores[0][hit] > 0:
+# 					data.append(deduped_women[hit])
+# 			if len(data)>30:
+# 				data = data[:30]
+# 			if len(data)==0:	
+# 				data = ["Sorry - we did not find a result matching that query."]
                 
 	
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
@@ -146,7 +157,12 @@ def search():
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
-        
+		# mostviewed_data = sort_views_high(data)
+		# leastviewed_data = sort_views_low(data)
+		# if (sorting=="mostviewed"):
+		# 	data = mostviewed_data
+		# if (sorting == "leastviewed"):
+		# 	data = leastviewed_data
             
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
 #		print data
@@ -156,11 +172,18 @@ def search():
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
 
-#    mostviewed_data = sort_views_high(data)
-#    leastviewed_data = sort_views_low(data)
-#    if (sorting=="mostviewed"):
-#        data = mostviewed_data
-#    if (sorting == "leastviewed"):
-#        data = leastviewed_data        
+		# mostviewed_data = sort_views_high(data)
+		# leastviewed_data = sort_views_low(data)
+		# if (sorting=="mostviewed"):
+		# 	data = mostviewed_data
+		# if (sorting == "leastviewed"):
+		# 	data = leastviewed_data
+	if (len(data) > 0 and data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."]) :
+		mostviewed_data = sort_views_high(data)
+		leastviewed_data = sort_views_low(data)
+		if (sorting == "mostviewed"):
+			data = mostviewed_data
+		if (sorting == "leastviewed"):
+			data = leastviewed_data
 	
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, sim_msg=sim_msg)
