@@ -215,3 +215,23 @@ h4 a:hover, h4 a:active, h4 a:focus{
 .unselectedSort:hover{
     color: #ffdf00;
 }
+#my_popup{
+    background-color:white;
+    font-family: Futura;
+    font-size: 14px;
+    padding:30px;
+}
+.fa-info-circle, .fa-times-circle{
+    color:grey;
+}
+.fa-heart{
+    color:#f53b8a;
+}
+.fa-times-circle:hover{
+    color:red;
+    cursor: pointer;
+}
+.fa-info-circle:hover{
+    color:darkgrey;
+    cursor:pointer;
+}

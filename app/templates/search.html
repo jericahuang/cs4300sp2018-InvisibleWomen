@@ -30,16 +30,23 @@
 
 <body style="background:url('https://img00.deviantart.net/da64/i/2008/306/e/b/starry_sky_stock_by_budgie.jpg')">
 
-    <!--
+    
     <div class="topcorner">
-        <p style="font-size: 15px; font-family:Futura; color: grey">Project Name: Invisible Women</p>
-        <p style="font-size: 15px; font-family:Futura; color: grey">May Zhou (mz278)</p>
-        <p style="font-size: 15px; font-family:Futura; color: grey">Amanda Chen (aec255)</p>
-        <p style="font-size: 15px; font-family:Futura; color: grey">Pegah Moradi (pm443)</p>
-        <p style="font-size: 15px; font-family:Futura; color: grey">Nina Ray (nr327)</p>
-        <p style="font-size: 15px; font-family:Futura; color: grey">Jerica Huang (jh2263)</p>
+        <i class="fas fa-info-circle my_popup_open fa-5x"></i>
+        <div id="my_popup">
+            <i class="fas fa-times-circle my_popup_close fa-2x" style="float:left;"></i><br><br>
+            <p>Created with <i class="fas fa-heart fa-2x"></i> for the INFO/CS 4300 Spring 2018 final project</p>
+            <p>By:</p>
+            <ul>
+                <li>May Zhou (mz278)</li>
+                <li>Amanda Chen (aec255)</li>
+                <li>Pegah Moradi (pm443)</li>
+                <li>Nina Ray (nr327)</li>
+                <li>Jerica Huang (jh2263)</li>
+            </ul>
+        </div>
     </div>
--->
+
 
     <form class="form-inline global-search">
         <h1 style="font-size: 55px; font-family:Futura; color: #fff" id="test">
@@ -164,11 +171,19 @@
     </div>
 </body>
 
-<!--
-<footer>
-    <p>Created with love for INFO/CS 4300 Spring 2018 final project</p>
-    <p>By May Zhou, Amanda Chen, Pegah Moradi, Nina Ray, and Jerica Huang.</p>
-</footer>
--->
+<!-- Include jQuery -->
+  <script src="https://code.jquery.com/jquery-1.8.2.min.js"></script>
+
+  <!-- Include jQuery Popup Overlay -->
+  <script src="https://cdn.rawgit.com/vast-engineering/jquery-popup-overlay/1.7.13/jquery.popupoverlay.js"></script>
+
+  <script>
+    $(document).ready(function() {
+
+      // Initialize the plugin
+      $('#my_popup').popup();
+
+    });
+  </script>
 
 </html>
