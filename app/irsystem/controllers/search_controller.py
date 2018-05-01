@@ -164,6 +164,7 @@ def search():
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
+
 		# mostviewed_data = sort_views_high(data)
 		# leastviewed_data = sort_views_low(data)
 		# if (sorting=="mostviewed"):
