@@ -12,8 +12,8 @@ import numpy as np
 import spacy
 from operator import itemgetter
 
-import en_core_web_md
-nlp = spacy.load('en_core_web_md')
+import en_core_web_sm
+nlp = spacy.load('en_core_web_sm')
 #import en_core_web_sm
 #nlp = en_core_web_sm.load()
 #nlp = spacy.load('en_core_web_md')
@@ -130,6 +130,7 @@ def search():
 			if data_tuple[1] == False:
 				# This means that cosine sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
+				print data_tuple
 				data = ["We don't have the exact result you were looking for, but we've done our best to find possible related results."]
 			elif data_tuple[2] == False:
 				# This means that spacy sim was not used
