@@ -185,5 +185,4 @@ def search():
 			data = mostviewed_data
 		if (sorting == "leastviewed"):
 			data = leastviewed_data
-	
-	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, sim_msg=sim_msg)
+	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, sortingmode=sorting, sim_msg=sim_msg)
