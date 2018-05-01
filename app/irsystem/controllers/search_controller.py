@@ -119,6 +119,7 @@ def search():
 			if data_tuple[1] == False:
 				# This means that cosine sim was not used
 				# PRINT SOMETHING HERE ? (HOW?)
+				print data_tuple
 				data = ["We don't have the exact result you were looking for, but we've done our best to find possible related results."]
 			elif data_tuple[2] == False:
 				# This means that spacy sim was not used
