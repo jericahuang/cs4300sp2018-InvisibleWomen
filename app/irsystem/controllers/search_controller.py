@@ -169,18 +169,8 @@ def search():
 # 				data = ["Sorry - we did not find a result matching that query."]
 
 # Data is a list of
-                
-	
-	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
-        
-		for i in range(len(data)):
-			womanname=data[i]
-			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
-			if womanname in top_5_dict_women:
-				data[i]["similar"] = top_5_dict_women[womanname]
-            
-	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
-#		print data
+
+	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0:	
 		for i in range(len(data)):
 			womanname=data[i]["name"]
 			data[i]["views"] = women_name_to_data[womanname]["views"]
