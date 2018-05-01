@@ -26,6 +26,7 @@ net_id = "Amanda Chen (aec255), Pegah Moradi (pm443), Nina Ray (nr327), Jerica H
 
 top_5_dict_words = pickle.load( open( "top_5_dict_words.pickle", "rb" ) )
 top_5_dict_women = pickle.load( open( "top_5_dict_women.pickle", "rb" ) )
+top_5_dict_women_upperkeys = pickle.load( open( "top_5_dict_women_upperkeys.pickle", "rb" ) )
 women_name_to_data = pickle.load( open( "women_name_to_data.pickle", "rb" ) )
 deduped_women = pickle.load( open( "deduped_women-search.pickle", "rb" ) )
 
@@ -124,25 +125,16 @@ def search():
 		output_message = query
 
 		if "is similar to " in query:
-			woman = query.split("is similar to ")[1]
-			woman = woman.title()
-			if woman in top_5_dict_women:
-				data = top_5_dict_women[woman]
-				# mostviewed_data = sort_views_high(data)
-				# leastviewed_data = sort_views_low(data)
-				# if (sorting=="mostviewed"):
-				# 	data = mostviewed_data
-				# if (sorting == "leastviewed"):
-				# 	data = leastviewed_data
+			woman = query.split("is similar to ")[1].upper()
+			if woman in top_5_dict_women_upperkeys:
+				data = top_5_dict_women_upperkeys[woman]
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
 		elif "is like " in query:
-			woman = query.split("is like ")[1]
-			woman = woman.title()
-			if woman in top_5_dict_women:
-				data = top_5_dict_women[woman]
-				# You can insert most/least here w/o breaking code
+			woman = query.split("is similar to ")[1].upper()
+			if woman in top_5_dict_women_upperkeys:
+				data = top_5_dict_women_upperkeys[woman]
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
