@@ -65,11 +65,43 @@ s
 
         <!-- Can change color later -->
         <form id="sorting">
-            <span id="sort-by" style="font-size: 18px; font-family: Futura; color: grey"> Sort by: </span>
-            <span id="most" style="font-size: 18px; font-family: Futura; color: grey"> <a href="/?search={{'+'.join(query.split(' '))}}">Most Similar</a> </span>
-            <span id="most" style="font-size: 18px; font-family: Futura; color: grey"> 
-                <a href="/?search={{'+'.join(query.split(' '))}}&sortingmode=mostviewed">Most Viewed</a> </span>
-            <span id="least" style="font-size: 18px; font-family: Futura; color: grey"> <a href="/?search={{'+'.join(query.split(' '))}}&sortingmode=leastviewed">Least Viewed</a> </span>
+            <span id="sort-by"> Sort by: </span>
+
+            {% if sortingmode %}
+                {% if sortingmode=='mostviewed' %}
+                <span id="sim"> <a href="/?search={{'+'.join(query.split(' '))}}" class="unselectedSort">Most Similar</a> </span> 
+                &nbsp;&nbsp;<i class="far fa-star"></i>&nbsp;&nbsp;
+                <span id="most"> 
+                    <span class="selectedSort">Most Viewed</span> 
+                </span> 
+                &nbsp;&nbsp;<i class="far fa-star"></i>&nbsp;&nbsp;
+                <span id="least">
+                    <a href="/?search={{'+'.join(query.split(' '))}}&amp;sortingmode=leastviewed" class="unselectedSort">Least Viewed</a> 
+                </span>
+                {% endif %}
+
+                {% if sortingmode=='leastviewed' %}
+                <span id="sim"> <a href="/?search={{'+'.join(query.split(' '))}}" class="unselectedSort">Most Similar</a> </span> 
+                &nbsp;&nbsp;<i class="far fa-star"></i>&nbsp;&nbsp;
+                <span id="most"> 
+                    <a href="/?search={{'+'.join(query.split(' '))}}&amp;sortingmode=mostviewed" class="unselectedSort">Most Viewed</a> 
+                </span> 
+                &nbsp;&nbsp;<i class="far fa-star"></i>&nbsp;&nbsp;
+                <span id="least">
+                    <span class="selectedSort">Least Viewed</span> 
+                </span>
+                {% endif %}
+            {% else %} <!--no sorting mode specified - most similar -->
+            <span id="sim"> <span class="selectedSort">Most Similar</span> </span> 
+                &nbsp;&nbsp;<i class="far fa-star"></i>&nbsp;&nbsp;
+                <span id="most"> 
+                    <a href="/?search={{'+'.join(query.split(' '))}}&amp;sortingmode=mostviewed" class="unselectedSort">Most Viewed</a> 
+                </span> 
+                &nbsp;&nbsp;<i class="far fa-star"></i>&nbsp;&nbsp;
+                <span id="least">
+                    <a href="/?search={{'+'.join(query.split(' '))}}&amp;sortingmode=leastviewed" class="unselectedSort">Least Viewed</a> 
+                </span>
+            {% endif %}
 
         </form>
 

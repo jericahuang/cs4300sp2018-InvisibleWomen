@@ -186,3 +186,26 @@ ol {
     font-size: 14px;
     color: #ddd;
 }
+.fa-star{
+    color:#fff;
+}
+#sort-by{
+    font-size: 18px; 
+    font-family: Futura; 
+    color: grey;
+}
+#sim,#most,#least{
+    font-size: 18px; 
+    font-family: Futura; 
+    color: grey;
+}
+.unselectedSort{
+    color: #cacaca;
+}
+.selectedSort{
+    color: #ffef7f;
+    text-decoration: underline;
+}
+.unselectedSort:hover{
+    color: #ffdf00;
+}
