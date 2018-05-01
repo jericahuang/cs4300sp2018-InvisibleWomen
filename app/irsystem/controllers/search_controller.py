@@ -57,14 +57,28 @@ def spacysim_scores(spacy_mat, query):
 # user_input is a boolean that tells 
 def sort_views_low(input_lst_dict):
 	length = len(input_lst_dict)
-	if (length > 0) : 
-		input_lst_dict = sorted(input_lst_dict, key = itemgetter('views'), reverse = False)
+	counter = 0
+	for input_dict in input_lst_dict :
+		if ('views' in input_dict) :
+			counter = counter + 1
+
+	if (counter == length and length > 2 and (input_lst_dict != ["No results :("]) and (input_lst_dict != ["Sorry - we did not find a result matching that query."])) : 
+		first_elm = input_lst_dict[0]
+		if ('views' in first_elm) :
+			input_lst_dict = sorted(input_lst_dict, key = itemgetter('views'), reverse = False)
 	return input_lst_dict
 
 def sort_views_high(input_lst_dict):
 	length = len(input_lst_dict)
-	if (length > 0) : 
-		input_lst_dict = sorted(input_lst_dict, key= itemgetter('views'), reverse=True)
+	counter = 0
+	for input_dict in input_lst_dict :
+		if ('views' in input_dict) :
+			counter = counter + 1
+
+	if (counter == length and length > 2 and (input_lst_dict != ["No results :("]) and (input_lst_dict != ["Sorry - we did not find a result matching that query."])) : 
+		first_elm = input_lst_dict[0]
+		if ('views' in first_elm) :
+			input_lst_dict = sorted(input_lst_dict, key = itemgetter('views'), reverse = True)
 	return input_lst_dict
 
 # a list of 30 dictionaries, each dictionary has name, summary, and views
@@ -164,13 +178,6 @@ def search():
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
-
-		# mostviewed_data = sort_views_high(data)
-		# leastviewed_data = sort_views_low(data)
-		# if (sorting=="mostviewed"):
-		# 	data = mostviewed_data
-		# if (sorting == "leastviewed"):
-		# 	data = leastviewed_data
             
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
 #		print data
@@ -180,13 +187,7 @@ def search():
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
 
-		# mostviewed_data = sort_views_high(data)
-		# leastviewed_data = sort_views_low(data)
-		# if (sorting=="mostviewed"):
-		# 	data = mostviewed_data
-		# if (sorting == "leastviewed"):
-		# 	data = leastviewed_data
-	if (len(data) > 0 and data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."]) :
+	if (len(data) > 1 and data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."]) :
 		mostviewed_data = sort_views_high(data)
 		leastviewed_data = sort_views_low(data)
 		if (sorting == "mostviewed"):
