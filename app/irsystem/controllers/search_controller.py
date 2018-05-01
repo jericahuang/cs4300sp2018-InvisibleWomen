@@ -26,7 +26,7 @@ net_id = "Amanda Chen (aec255), Pegah Moradi (pm443), Nina Ray (nr327), Jerica H
 
 top_5_dict_words = pickle.load( open( "top_5_dict_words.pickle", "rb" ) )
 top_5_dict_women = pickle.load( open( "top_5_dict_women.pickle", "rb" ) )
-top_5_dict_women_upperkeys = pickle.load( open( "top_5_dict_women_upperkeys.pickle", "rb" ) )
+upper_names_to_official = pickle.load( open( "upper_to_official.pickle", "rb" ) )
 women_name_to_data = pickle.load( open( "women_name_to_data.pickle", "rb" ) )
 deduped_women = pickle.load( open( "deduped_women-search.pickle", "rb" ) )
 
@@ -122,22 +122,30 @@ def search():
 		data = []
 		output_message = ''
 	else:
+		query = query.strip()
 		output_message = query
 
-		if "is similar to " in query:
-			woman = query.split("is similar to ")[1].upper()
-			if woman in top_5_dict_women_upperkeys:
-				data = top_5_dict_women_upperkeys[woman]
+		if query.upper() in upper_names_to_official: #query matches a woman's name
+			data = [upper_names_to_official[query.upper()]]
+
+		elif "is similar to " in query:
+			woman = query.split("is similar to ")[1].upper().strip()
+			if woman in upper_names_to_official:
+				data = top_5_dict_women[upper_names_to_official[woman]]
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
 		elif "is like " in query:
-			woman = query.split("is like ")[1].upper()
-			if woman in top_5_dict_women_upperkeys:
-				data = top_5_dict_women_upperkeys[woman]
+			woman = query.split("is like ")[1].upper().strip()
+			if woman in upper_names_to_official:
+				data = top_5_dict_women[upper_names_to_official[woman]]
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
-				
+		
+		elif query.find("is ")==0 and query[3:].upper() in upper_names_to_official:
+			uppername = query[3:].upper()
+			data = [upper_names_to_official[uppername]]
+
 		else:
 			s = spacysim_scores(spacy_array, query)
 			c = cossim_scores(vectorizer, matx, query)
@@ -147,20 +155,6 @@ def search():
 				sim_msg = "We don't have the exact result you were looking for, but we've done our best to find related results."
 			if data_tuple[2] == False:
 				data = ["No results :("]
-
-# 			sim_doc_scores = cosine_similarity(q_vec, matx)
-# 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
-# 			data = []
-# #			print sim_docs
-# 			for hit in sim_docs:
-# 				if sim_doc_scores[0][hit] > 0:
-# 					data.append(deduped_women[hit])
-# 			if len(data)>30:
-# 				data = data[:30]
-# 			if len(data)==0:	
-# 				data = ["Sorry - we did not find a result matching that query."]
-
-# Data is a list of
 
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0:	
 		for i in range(len(data)):
