@@ -133,8 +133,6 @@ def search():
 				sim_msg = "We don't have the exact result you were looking for, but we've done our best to find related results."
 			if data_tuple[2] == False:
 				data = ["No results :("]
-<<<<<<< HEAD
-
 # 			sim_doc_scores = cosine_similarity(q_vec, matx)
 # 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
 # 			data = []
@@ -149,8 +147,7 @@ def search():
 
 # Data is a list of
                 
-=======
->>>>>>> 992e1ced03422b8abacb097253e7df2859dbc48f
+
 	
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
 		for i in range(len(data)):
@@ -158,16 +155,7 @@ def search():
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
-<<<<<<< HEAD
-			
-		# mostviewed_data = sort_views_high(data)
-		# leastviewed_data = sort_views_low(data)
-		# if (sorting=="mostviewed"):
-		# 	data = mostviewed_data
-		# if (sorting == "leastviewed"):
-		# 	data = leastviewed_data
-=======
->>>>>>> 992e1ced03422b8abacb097253e7df2859dbc48f
+
             
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
 		for i in range(len(data)):
