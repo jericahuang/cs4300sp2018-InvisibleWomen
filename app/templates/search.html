@@ -66,10 +66,10 @@ s
         <!-- Can change color later -->
         <form id="sorting">
             <span id="sort-by" style="font-size: 18px; font-family: Futura; color: grey"> Sort by: </span>
-            <span id="most" style="font-size: 18px; font-family: Futura; color: grey"> <a href="/?search=+{{query}}">Most Similar</a> </span>
+            <span id="most" style="font-size: 18px; font-family: Futura; color: grey"> <a href="/?search={{'+'.join(query.split(' '))}}">Most Similar</a> </span>
             <span id="most" style="font-size: 18px; font-family: Futura; color: grey"> 
-                <a href="/?search=+{{query}}&sortingmode=mostviewed">Most Viewed</a> </span>
-            <span id="least" style="font-size: 18px; font-family: Futura; color: grey"> <a href="/?search=+{{query}}&sortingmode=leastviewed">Least Viewed</a> </span>
+                <a href="/?search={{'+'.join(query.split(' '))}}&sortingmode=mostviewed">Most Viewed</a> </span>
+            <span id="least" style="font-size: 18px; font-family: Futura; color: grey"> <a href="/?search={{'+'.join(query.split(' '))}}&sortingmode=leastviewed">Least Viewed</a> </span>
 
         </form>
 
