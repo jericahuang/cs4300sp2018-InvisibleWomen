@@ -26,9 +26,8 @@ net_id = "Amanda Chen (aec255), Pegah Moradi (pm443), Nina Ray (nr327), Jerica H
 
 top_5_dict_words = pickle.load( open( "top_5_dict_words.pickle", "rb" ) )
 top_5_dict_women = pickle.load( open( "top_5_dict_women.pickle", "rb" ) )
-top_5_dict_women_upperkeys = pickle.load( open( "top_5_dict_women_upperkeys.pickle", "rb" ) )
 women_name_to_data = pickle.load( open( "women_name_to_data.pickle", "rb" ) )
-deduped_women = pickle.load( open( "deduped_women.pickle", "rb" ) )
+deduped_women = pickle.load( open( "deduped_women-search.pickle", "rb" ) )
 
 pkl_file = open('myvectorizer.pickle', 'rb')
 vectorizer = pickle.load(pkl_file)
@@ -111,16 +110,25 @@ def search():
 		output_message = query
 
 		if "is similar to " in query:
-			woman = query.split("is similar to ")[1].upper()
-			if woman in top_5_dict_women_upperkeys:
-				data = top_5_dict_women_upperkeys[woman]
+			woman = query.split("is similar to ")[1]
+			woman = woman.title()
+			if woman in top_5_dict_women:
+				data = top_5_dict_women[woman]
+				# mostviewed_data = sort_views_high(data)
+				# leastviewed_data = sort_views_low(data)
+				# if (sorting=="mostviewed"):
+				# 	data = mostviewed_data
+				# if (sorting == "leastviewed"):
+				# 	data = leastviewed_data
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
 		elif "is like " in query:
-			woman = query.split("is similar to ")[1].upper()
-			if woman in top_5_dict_women_upperkeys:
-				data = top_5_dict_women_upperkeys[woman]
+			woman = query.split("is like ")[1]
+			woman = woman.title()
+			if woman in top_5_dict_women:
+				data = top_5_dict_women[woman]
+				# You can insert most/least here w/o breaking code
 			else:
 				data = ["Sorry - we did not find a result matching that query."]
 				
@@ -133,7 +141,6 @@ def search():
 				sim_msg = "We don't have the exact result you were looking for, but we've done our best to find related results."
 			if data_tuple[2] == False:
 				data = ["No results :("]
-<<<<<<< HEAD
 
 # 			sim_doc_scores = cosine_similarity(q_vec, matx)
 # 			sim_docs = np.argsort(sim_doc_scores.flatten())[::-1]
@@ -149,34 +156,35 @@ def search():
 
 # Data is a list of
                 
-=======
->>>>>>> 992e1ced03422b8abacb097253e7df2859dbc48f
 	
 	if data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and type(data[0]) is not dict:
+        
 		for i in range(len(data)):
 			womanname=data[i]
 			data[i] = {"name": womanname, "summary": women_name_to_data[womanname]["summary"], "views": women_name_to_data[womanname]["views"], "url": women_name_to_data[womanname]["url"]}
 			if womanname in top_5_dict_women:
 				data[i]["similar"] = top_5_dict_women[womanname]
-<<<<<<< HEAD
-			
 		# mostviewed_data = sort_views_high(data)
 		# leastviewed_data = sort_views_low(data)
 		# if (sorting=="mostviewed"):
 		# 	data = mostviewed_data
 		# if (sorting == "leastviewed"):
 		# 	data = leastviewed_data
-=======
->>>>>>> 992e1ced03422b8abacb097253e7df2859dbc48f
             
 	elif data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."] and len(data)>0 and "views" not in data[0] and "similar" not in data[0]:
+#		print data
 		for i in range(len(data)):
 			womanname=data[i]["name"]
 			data[i]["views"] = women_name_to_data[womanname]["views"]
 			data[i]["similar"] = top_5_dict_women[womanname]
 			data[i]["url"] = women_name_to_data[womanname]["url"]
 
-
+		# mostviewed_data = sort_views_high(data)
+		# leastviewed_data = sort_views_low(data)
+		# if (sorting=="mostviewed"):
+		# 	data = mostviewed_data
+		# if (sorting == "leastviewed"):
+		# 	data = leastviewed_data
 	if (len(data) > 0 and data != ["No results :("] and data != ["Sorry - we did not find a result matching that query."]) :
 		mostviewed_data = sort_views_high(data)
 		leastviewed_data = sort_views_low(data)
@@ -184,6 +192,4 @@ def search():
 			data = mostviewed_data
 		if (sorting == "leastviewed"):
 			data = leastviewed_data
-
-	print query
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data, query=query, sortingmode=sorting, sim_msg=sim_msg)
