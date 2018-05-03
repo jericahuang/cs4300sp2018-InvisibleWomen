@@ -182,6 +182,11 @@ td {
     padding: 10px 10px 10px 10px;
 }
 
+td.similars{
+    display: inline-block;
+    width:25%;
+}
+
 ol {
     font-size: 14px;
     color: #ddd;
@@ -235,3 +240,11 @@ h4 a:hover, h4 a:active, h4 a:focus{
     color:darkgrey;
     cursor:pointer;
 }
+
+@media (max-width:957px) {
+    td.similars{
+    display: inline-block;
+    width:100%;
+    overflow-x:auto;
+}
+    }

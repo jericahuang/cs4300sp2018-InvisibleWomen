@@ -136,7 +136,7 @@
                     <span class="summary">{{d.summary}}</span>
                 </td>
 
-                <td>
+                <td class="similars">
                     {% if d.similar %} Similar women&nbsp;&nbsp;<a href="/?search=is+similar+to+{{'+'.join(d.name.split(' '))}}" class="similarsearch"><i class="fas fa-search tip" data-tip="Explore top 5 similar women"></i>
                         <ol class="tip" data-tip="Explore top 5 similar women">
                             {% for similars in d.similar %} {% if similars.name %}
